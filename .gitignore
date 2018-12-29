@@ -1,0 +1,8 @@
+# Build folder will be ignored
+build/*
+
+# Ignore object files
+**/*.o
+
+# Ignore vim files
+**/*.swp
