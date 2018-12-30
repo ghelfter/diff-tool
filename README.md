@@ -10,5 +10,6 @@ This is a simple utility to run a graphic diff tool on a set of documents.
 
 To build it, the following are needed:
 
+* CMake
 * C++ compiler with C++-14
 * C compiler

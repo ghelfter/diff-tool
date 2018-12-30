@@ -22,7 +22,6 @@
 
 #include <diff/display/window.hpp>
 #include <diff/util/common.h>
-#include <diff/util/c_unique_ptr.hpp>
 
 enum ControllerState
 {
@@ -97,9 +96,6 @@ int main(int argc, char **argv)
             --arg_count;
         }
     }
-
-    Diff::Util::c_unique_ptr<int> myptr = Diff::Util::c_make_unique<int>(sizeof(int));
-    // std::unique_ptr<int[]> myptr;
 
     diff_controllers[controller]();
 

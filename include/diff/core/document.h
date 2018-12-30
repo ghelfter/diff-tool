@@ -16,23 +16,23 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _DIFF_CORE_LOG_H
-#define _DIFF_CORE_LOG_H
+#ifndef _DIFF_CORE_DOCUMENT_H
+#define _DIFF_CORE_DOCUMENT_H
 
 #if defined(__cplusplus)
 extern "C"
 {
 #endif /* __cplusplus */
 
-/* Initializes the logging system to write to the given path. */
-unsigned int core_log_init(const char *path);
+typedef struct _diff_document
+{
+    char *filepath;
+} diff_document_t;
 
-/* Given the current log, writes the message and a newline character out to
- * the log file. */
-void core_log_write(const char *message);
+void core_document_init(diff_document_t *document);
 
 #if defined(__cplusplus)
 }
 #endif /* __cplusplus */
 
-#endif /* _DIFF_CORE_LOG_H */
+#endif /* _DIFF_CORE_DOCUMENT_H */

@@ -58,8 +58,10 @@ set(DIFF_SOURCES
     src/main.cpp
 
     # Core files
+    src/core/document.c
     src/core/log.c
     src/core/settings.c
+    src/core/state.c
 
     # Display and UI files
     src/display/window.cpp
@@ -71,15 +73,19 @@ set(DIFF_SOURCES
     src/proc/run_diff.c
 
     # Utility files
+    src/util/about.c
     src/util/error.c
     src/util/file_utils.c
+    src/util/memory.c
 )
 
 # Note that headers requiring Qt components must be explicitly listed
 # for the automoc to run properly with it.
 set(DIFF_HEADERS
+    include/diff/core/document.h
     include/diff/core/log.h
     include/diff/core/settings.h
+    include/diff/core/state.h
 
     include/diff/display/window.hpp
     include/diff/display/menu/edit.hpp
@@ -88,10 +94,13 @@ set(DIFF_HEADERS
 
     include/diff/proc/run_diff.h
 
+    include/diff/util/about.h
+    include/diff/util/atomic.h
     include/diff/util/common.h
     include/diff/util/error.h
     include/diff/util/c_unique_ptr.hpp
     include/diff/util/file_utils.h
+    include/diff/util/memory.h
 )
 
 

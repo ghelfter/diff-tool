@@ -16,23 +16,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _DIFF_CORE_LOG_H
-#define _DIFF_CORE_LOG_H
+#include <diff/util/about.h>
 
-#if defined(__cplusplus)
-extern "C"
-{
-#endif /* __cplusplus */
+const char *util_about_version = DIFF_VERSION;
 
-/* Initializes the logging system to write to the given path. */
-unsigned int core_log_init(const char *path);
+const char *util_about_author = "Galen Helfter";
 
-/* Given the current log, writes the message and a newline character out to
- * the log file. */
-void core_log_write(const char *message);
-
-#if defined(__cplusplus)
-}
-#endif /* __cplusplus */
-
-#endif /* _DIFF_CORE_LOG_H */
+const char *util_about_copyright =
+    "Diff Tool - Tool for graphically running a formatter\n"
+    "Copyright (C) 2019 Galen Helfter\n\n";

@@ -16,23 +16,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _DIFF_CORE_LOG_H
-#define _DIFF_CORE_LOG_H
+#include <diff/core/state.h>
 
-#if defined(__cplusplus)
-extern "C"
-{
-#endif /* __cplusplus */
-
-/* Initializes the logging system to write to the given path. */
-unsigned int core_log_init(const char *path);
-
-/* Given the current log, writes the message and a newline character out to
- * the log file. */
-void core_log_write(const char *message);
-
-#if defined(__cplusplus)
-}
-#endif /* __cplusplus */
-
-#endif /* _DIFF_CORE_LOG_H */
+core_state_t core_state = { 0u };

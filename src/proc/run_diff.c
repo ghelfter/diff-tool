@@ -27,15 +27,30 @@
 #elif defined(DIFF_WIN32)
 #endif
 
+#if defined(DIFF_POSIX)
+static int run_process(const char *program, const char *file, uint8_t **buffer)
+{
+    FILE *fp = NULL;
+    int result = 0;
+
+    return result;
+}
+#else
+static int run_process(const char *program, const char *file, uint8_t **buffer)
+{
+    return 0;
+}
+#endif
+
 unsigned int proc_run_diff(const char *program, const char *file,
                            uint8_t **buffer)
 {
     unsigned int retcode = 0u;
-    FILE *fp = NULL;
+    int result = 0;
 
     if (program != NULL && file != NULL && buffer != NULL)
     {
-
+        result = run_process(program, file, buffer);
     }
 
     return retcode;

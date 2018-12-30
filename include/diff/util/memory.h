@@ -16,23 +16,33 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _DIFF_CORE_LOG_H
-#define _DIFF_CORE_LOG_H
+#ifndef _DIFF_UTIL_MEMORY_H
+#define _DIFF_UTIL_MEMORY_H
 
 #if defined(__cplusplus)
 extern "C"
 {
-#endif /* __cplusplus */
+#endif
 
-/* Initializes the logging system to write to the given path. */
-unsigned int core_log_init(const char *path);
+/* Allocates the given amount of memory using the internally set memory
+ * allocator. */
+void* util_alloc(size_t size);
 
-/* Given the current log, writes the message and a newline character out to
- * the log file. */
-void core_log_write(const char *message);
+/* Frees the memory using the internal free function. This must have been
+ * allocated using util_alloc. */
+void util_free(void *mem);
+
+/* Sets the internal allocators to the provided functions, matching the
+ * signatures of malloc and free respectively. These functions must be
+ * the foil of each other. */
+void util_set_allocators(void* (*alloc_func)(size_t), void (*free_func)(void*));
+
+/* Duplicates a string, using the internal memory allocator. This can later be
+ * freed using util_free. */
+char* util_strdup(const char *str);
 
 #if defined(__cplusplus)
 }
 #endif /* __cplusplus */
 
-#endif /* _DIFF_CORE_LOG_H */
+#endif /* _DIFF_UTIL_MEMORY_H */

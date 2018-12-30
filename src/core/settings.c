@@ -18,10 +18,18 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <diff/core/settings.h>
 #include <diff/util/error.h>
 #include <diff/util/file_utils.h>
+
+typedef struct _diff_settings
+{
+    char *diff_program_path;
+} diff_settings_t;
+
+static diff_settings_t settings = { NULL };
 
 unsigned int core_load_settings_file(const char *filepath)
 {
@@ -53,4 +61,19 @@ unsigned int core_load_settings_buffer(uint8_t *buffer)
     }
 
     return retcode;
+}
+
+void core_set_diff_program(const char *path)
+{
+    if (settings.diff_program_path != NULL)
+    {
+        free(settings.diff_program_path);
+    }
+
+    settings.diff_program_path = strdup(path);
+}
+
+char* core_get_diff_program()
+{
+    return strdup(settings.diff_program_path);
 }

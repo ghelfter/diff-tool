@@ -34,6 +34,9 @@ namespace Diff
                 ~MainWindow() override;
 
             private:
+                /* Main menu bar */
+                std::unique_ptr<QMenuBar> mMenuBar;
+
                 /* File menu and its actions */
                 std::unique_ptr<QMenu> mFileMenu;
 

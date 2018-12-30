@@ -35,6 +35,7 @@ namespace Diff
     {
         MainWindow::MainWindow(QWidget *parent)
             : QMainWindow(parent)
+            , mMenuBar(nullptr)
             , mFileMenu(nullptr)
             , mEditMenu(nullptr)
             , mHelpMenu(nullptr)
@@ -48,14 +49,18 @@ namespace Diff
 
         void MainWindow::create_menus()
         {
+            mMenuBar = std::make_unique<QMenuBar>(nullptr);
+
+            setMenuBar(mMenuBar.get());
+
             mFileMenu = std::make_unique<FileMenu>();
-            menuBar()->addMenu(mFileMenu.get());
+            mMenuBar->addMenu(mFileMenu.get());
 
             mEditMenu = std::make_unique<EditMenu>();
-            menuBar()->addMenu(mEditMenu.get());
+            mMenuBar->addMenu(mEditMenu.get());
 
             mHelpMenu = std::make_unique<HelpMenu>();
-            menuBar()->addMenu(mHelpMenu.get());
+            mMenuBar->addMenu(mHelpMenu.get());
         }
 
         int main_display(int args, char **argv)

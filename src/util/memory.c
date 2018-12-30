@@ -16,49 +16,42 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <diff/util/error.h>
 
-static char *log_path = NULL;
+static void* (*util_alloc_func)(size_t) = malloc;
+static void (*util_free_func)(void*) = free;
 
-static void set_log_path(const char *path)
+void* util_alloc(size_t size)
 {
-    if (path != NULL)
-    {
-        if (log_path != NULL)
-        {
-            free(log_path);
-        }
+    return util_alloc_func(size);
+}
 
-        log_path = strdup(path);
+void util_free(void *mem)
+{
+    util_free_func(mem);
+}
+
+void util_set_allocators(void* (*alloc_func)(size_t), void (*free_func)(void*))
+{
+    if (alloc_func != NULL && free_func != NULL)
+    {
+        util_alloc_func = alloc_func;
+        util_free_func = free_func;
     }
 }
 
-unsigned int core_log_init(const char *path)
+char* util_strdup(const char *str)
 {
-    unsigned int retcode = DIFF_SUCCESS;
+    char *result = NULL;
+    size_t string_length = 0u;
 
-    set_log_path(path);
-
-    return retcode;
-}
-
-void core_log_write(const char *message)
-{
-    FILE *fp = NULL;
-
-    if (message != NULL)
+    if (str != NULL)
     {
-        fp = fopen(log_path, "a");
+        string_length = strlen(str) + 1;
+        result = util_alloc(sizeof(char) * string_length);
 
-        if (fp != NULL)
-        {
-            fputs(message, fp);
-            fputc('\n', fp);
-
-            fclose(fp);
-        }
+        memcpy(result, str, sizeof(char) * string_length);
     }
+
+    return result;
 }
