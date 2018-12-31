@@ -26,8 +26,9 @@ extern "C"
 {
 #endif /* __cplusplus */
 
+/* Forced standard C syntax */
 #if defined(DIFF_FORCE_NO_ATOMIC)
-#define UTIL_ATOMIC_EXCHANGE(val,oval,nval,res) \
+#define UTIL_ATOMIC_COMPARE_EXCHANGE(val,oval,nval,res) \
     if((val)==(oval))\
     {\
         (val)=(nval);\
@@ -48,29 +49,75 @@ extern "C"
         (res)=(val);\
         (res)^=(op);\
     }
+#define UTIL_ATOMIC_INCREMENT(val,res) \
+    ((res) = (++(val)))
+
+#define UTIL_ATOMIC_DECREMENT(val,res) \
+    ((res) = (--(val)))
+
+#define UTIL_ATOMIC_EXCHANGE(val,op,res) \
+    {\
+        (res)=(val);\
+        (val)=(op);\
+    }
+
+/* GCC/Clang atomic definitions */
 #elif defined(__GNUC__)
-#define UTIL_ATOMIC_EXCHANGE(val,oval,nval,res) \
+/* Define the default memory order */
+#define UTIL_MEMORDER __ATOMIC_RELAXED
+
+#define UTIL_ATOMIC_COMPARE_EXCHANGE(val,oval,nval,res) \
     {\
         (res)=(oval);\
         __atomic_compare_exchange(&(val),&(res),(nval),\
-                                  __ATOMIC_RELAXED,\
-                                  __ATOMIC_RELAXED);\
+                                  UTIL_MEMORDER,\
+                                  UTIL_MEMORDER);\
     }
+
 #define UTIL_ATOMIC_AND(val,op,res) \
-    ((res) = __atomic_fetch_and(&(val),op,__ATOMIC_RELAXED))
+    ((res) = __atomic_fetch_and(&(val),op,UTIL_MEMORDER))
+
 #define UTIL_ATOMIC_OR(val,op,res) \
-    ((res) = __atomic_fetch_or(&(val),op,__ATOMIC_RELAXED))
+    ((res) = __atomic_fetch_or(&(val),op,UTIL_MEMORDER))
+
 #define UTIL_ATOMIC_XOR(val,op,res) \
-    ((res) = __atomic_fetch_xor(&(val),op,__ATOMIC_RELAXED))
+    ((res) = __atomic_fetch_xor(&(val),op,UTIL_MEMORDER))
+
+#define UTIL_ATOMIC_INCREMENT(val,res) \
+    ((res) = __atomic_add_fetch(&(val),1,UTIL_MEMORDER))
+
+#define UTIL_ATOMIC_DECREMENT(val,res) \
+    ((res) = __atomic_sub_fetch(&(val),1,UTIL_MEMORDER))
+
+#define UTIL_ATOMIC_EXCHANGE(val,op,res) \
+    __atomic_exchange(&(val),&(op),&(res),UTIL_MEMORDER)
+
+/* MSVC atomic operations */
 #elif defined(DIFF_WIN32)
-#define UTIL_ATOMIC_EXCHANGE(val,oval,nval,res) \
+#include <wdm.h> /* Windows header for Interlocked operations */
+
+#define UTIL_ATOMIC_COMPARE_EXCHANGE(val,oval,nval,res) \
     ((res) = InterlockedCompareExchange(&(val),(nval),(oval)))
+
 #define UTIL_ATOMIC_AND(val,op,res) \
     ((res) = InterlockedAnd(&(val),op))
+
 #define UTIL_ATOMIC_OR(val,op,res) \
     ((res) = InterlockedOr(&(val),op))
+
 #define UTIL_ATOMIC_XOR(val,op,res) \
     ((res) = InterlockedXor(&(val),op))
+
+#define UTIL_ATOMIC_INCREMENT(val,res) \
+    ((res) = InterlockedIncrement(&(val)))
+
+#define UTIL_ATOMIC_DECREMENT(val,res) \
+    ((res) = InterlockedDecrement(&(val)))
+
+#define UTIL_ATOMIC_EXCHANGE(val,op,res) \
+    ((res) = InterlockedExchange(&(val),(op)));
+
+/* Error if none are found */
 #else
 #error "Must have defined atomic operations"
 #endif

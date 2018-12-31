@@ -16,50 +16,29 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <diff/util/error.h>
-#include <diff/util/memory.h>
+#ifndef _DIFF_DISPLAY_PANE_SIDE_HPP
+#define _DIFF_DISPLAY_PANE_SIDE_HPP
 
-static char *log_path = NULL;
+#include <QWidget>
 
-static void set_log_path(const char *path)
+namespace Diff
 {
-    if (path != NULL)
+    namespace Display
     {
-        if (log_path != NULL)
+        class SidePane : public QWidget
         {
-            util_free(log_path);
-        }
+            Q_OBJECT
 
-        log_path = util_strdup(path);
-    }
-}
+            public:
+                explicit SidePane(QWidget *parent = nullptr);
+                ~SidePane() override;
 
-unsigned int core_log_init(const char *path)
-{
-    unsigned int retcode = DIFF_SUCCESS;
+            private:
 
-    set_log_path(path);
+            signals:
+            public slots:
+        };
+    } // namespace Display
+} // namespace Diff
 
-    return retcode;
-}
-
-void core_log_write(const char *message)
-{
-    FILE *fp = NULL;
-
-    if (message != NULL)
-    {
-        fp = fopen(log_path, "a");
-
-        if (fp != NULL)
-        {
-            fputs(message, fp);
-            fputc('\n', fp);
-
-            fclose(fp);
-        }
-    }
-}
+#endif /* _DIFF_DISPLAY_PANE_SIDE_HPP */

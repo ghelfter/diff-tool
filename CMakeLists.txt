@@ -68,6 +68,7 @@ set(DIFF_SOURCES
     src/display/menu/edit.cpp
     src/display/menu/file.cpp
     src/display/menu/help.cpp
+    src/display/pane/side.cpp
 
     # Process running files
     src/proc/run_diff.c
@@ -91,6 +92,7 @@ set(DIFF_HEADERS
     include/diff/display/menu/edit.hpp
     include/diff/display/menu/file.hpp
     include/diff/display/menu/help.hpp
+    include/diff/display/pane/side.hpp
 
     include/diff/proc/run_diff.h
 
@@ -103,6 +105,20 @@ set(DIFF_HEADERS
     include/diff/util/memory.h
 )
 
+# Platform specific source files
+if (UNIX)
+    set(DIFF_SOURCES
+
+        ${DIFF_SOURCES}
+        src/util/thread_unix.c
+    )
+elseif (WIN32)
+    set(DIFF_SOURCES
+
+        ${DIFF_SOURCES}
+        src/util/thread_windows.c
+    )
+endif ()
 
 find_package(Qt5Core CONFIG REQUIRED)
 find_package(Qt5Widgets CONFIG REQUIRED)

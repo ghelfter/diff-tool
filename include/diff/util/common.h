@@ -61,6 +61,7 @@ extern "C"
 #define DIFF_EXPORT __declspec(dllexport)
 #else
 #define DIFF_EXPORT
+#warning "No export attribute determined for the module."
 #endif
 
 #if defined(__cplusplus)

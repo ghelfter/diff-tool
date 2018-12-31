@@ -16,43 +16,24 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <stdlib.h>
-#include <string.h>
+#include <diff/util/thread.h>
 
-static void* (*util_alloc_func)(size_t) = malloc;
-static void (*util_free_func)(void*) = free;
-
-void* util_alloc(size_t size)
+void util_mutex_lock(util_mutex_t *lock)
 {
-    return util_alloc_func(size);
+    pthread_mutex_lock(lock);
 }
 
-void util_free(void *mem)
+void util_cond_sleep(util_cond_t *cond, util_mutex_t *lock)
 {
-    util_free_func(mem);
+    pthread_cond_wait(cond, lock);
 }
 
-void util_set_allocators(void* (*alloc_func)(size_t), void (*free_func)(void*))
+void util_cond_signal(util_cond_t *cond)
 {
-    if (alloc_func != NULL && free_func != NULL)
-    {
-        util_alloc_func = alloc_func;
-        util_free_func = free_func;
-    }
+    pthread_cond_signal(cond);
 }
 
-char* util_strdup(const char *str)
+void util_cond_broadcast(util_cond_t *cond)
 {
-    char *result = NULL;
-    size_t string_length = 0u;
-
-    if (str != NULL)
-    {
-        string_length = strlen(str) + 1;
-        result = util_alloc(sizeof(char) * string_length);
-
-        memcpy(result, str, sizeof(char) * string_length);
-    }
-
-    return result;
+    pthread_cond_broadcast(cond);
 }
