@@ -22,6 +22,8 @@
 #include <QMenu>
 #include <QAction>
 
+#include <memory>
+
 namespace Diff
 {
     namespace Display

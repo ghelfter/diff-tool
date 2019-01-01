@@ -16,6 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <diff/display/strings.h>
 #include <diff/display/menu/file.hpp>
 
 #include <memory>
@@ -39,13 +40,13 @@ namespace Diff
 
         void FileMenu::create_actions()
         {
-            mFileOpen = std::make_unique<QAction>(tr("&Open"), this);
+            mFileOpen = std::make_unique<QAction>(tr(display_open_button), this);
             mFileOpen->setShortcuts(QKeySequence::Open);
             mFileOpen->setStatusTip(tr("Open selected files"));
             connect(mFileOpen.get(), &QAction::triggered,
                     this, &FileMenu::open_action);
 
-            mFileClose = std::make_unique<QAction>(tr("&Close"), this);
+            mFileClose = std::make_unique<QAction>(tr(display_close_button), this);
             mFileClose->setShortcuts(QKeySequence::Cut);
             mFileClose->setStatusTip(tr("Close files"));
             connect(mFileClose.get(), &QAction::triggered,
@@ -57,12 +58,10 @@ namespace Diff
 
         void FileMenu::open_action()
         {
-            fprintf(stdout, "File->Open\n");
         }
 
         void FileMenu::close_action()
         {
-            fprintf(stdout, "File->Close\n");
         }
     } // namespace Display
 } // namespace Diff

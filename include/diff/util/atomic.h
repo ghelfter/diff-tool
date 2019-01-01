@@ -69,7 +69,7 @@ extern "C"
 #define UTIL_ATOMIC_COMPARE_EXCHANGE(val,oval,nval,res) \
     {\
         (res)=(oval);\
-        __atomic_compare_exchange(&(val),&(res),(nval),\
+        __atomic_compare_exchange(&(val),&(res),&(nval),0,\
                                   UTIL_MEMORDER,\
                                   UTIL_MEMORDER);\
     }

@@ -22,6 +22,8 @@
 #include <QMenu>
 #include <QAction>
 
+#include <memory>
+
 namespace Diff
 {
     namespace Display
@@ -41,10 +43,12 @@ namespace Diff
             private:
                 void create_actions();
 
-            signals:
             public slots:
                 /* Help menu slots */
                 void about_action();
+
+            signals:
+                void about_signal();
         };
     } // namespace Display
 } // namespace Diff

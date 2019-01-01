@@ -18,10 +18,13 @@
 
 #include <diff/util/about.h>
 
+const char *util_about_title = "Format Diff Editor";
+
 const char *util_about_version = DIFF_VERSION;
 
 const char *util_about_author = "Galen Helfter";
 
-const char *util_about_copyright =
-    "Diff Tool - Tool for graphically running a formatter\n"
-    "Copyright (C) 2019 Galen Helfter\n\n";
+const char *util_about_description = 
+    "Diff Tool - Tool for graphically running a formatter";
+
+const char *util_about_copyright = "Copyright (C) 2019 Galen Helfter";

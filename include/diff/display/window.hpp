@@ -20,6 +20,9 @@
 #define _DIFF_DISPLAY_WINDOW_HPP
 
 #include <QMainWindow>
+#include <QTextEdit>
+
+#include <memory>
 
 namespace Diff
 {
@@ -46,12 +49,16 @@ namespace Diff
                 /* Help menu and its actions */
                 std::unique_ptr<QMenu> mHelpMenu;
 
+                /* Central text display */
+                std::unique_ptr<QTextEdit> mTextPane;
+
             private:
                 void create_menus();
-                void create_help_menu();
+                void create_ui_panes();
 
             signals:
             public slots:
+                void about_dialog();
         };
         
         int main_display(int args, char **argv);

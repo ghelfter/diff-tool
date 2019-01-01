@@ -16,25 +16,29 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <diff/display/pane/side.hpp>
+#ifndef _DIFF_DISPLAY_PANE_TEXT_HPP
+#define _DIFF_DISPLAY_PANE_TEXT_HPP
+
+#include <QTextEdit>
 
 namespace Diff
 {
     namespace Display
     {
-        SidePane::SidePane(QWidget *parent)
-            : QWidget(parent)
+        class TextPane : public QTextEdit
         {
-            create_widgets();
-        }
+            Q_OBJECT
 
-        SidePane::~SidePane()
-        {
-        }
+            public:
+                explicit TextPane(QWidget *parent = nullptr);
+                ~TextPane() override;
 
-        void SidePane::create_widgets()
-        {
-            /* Create the vertical layout for the side panel. */
-        }
+            private:
+
+            signals:
+            public slots:
+        };
     } // namespace Display
 } // namespace Diff
+
+#endif /* _DIFF_DISPLAY_PANE_TEXT_HPP */

@@ -25,9 +25,12 @@
 #include <cstdio>
 
 #include <diff/display/window.hpp>
+#include <diff/display/dialog/about.hpp>
 #include <diff/display/menu/edit.hpp>
 #include <diff/display/menu/file.hpp>
 #include <diff/display/menu/help.hpp>
+#include <diff/display/pane/text.hpp>
+#include <diff/util/about.h>
 
 namespace Diff
 {
@@ -41,6 +44,17 @@ namespace Diff
             , mHelpMenu(nullptr)
         {
             create_menus();
+
+            /* Create widgets */
+            create_ui_panes();
+
+            /* Set main window widget */
+            setCentralWidget(mTextPane.get());
+
+            /* Set the title to the program title */
+            setWindowTitle(tr(util_about_title));
+
+            setUnifiedTitleAndToolBarOnMac(true);
         }
 
         MainWindow::~MainWindow()
@@ -61,6 +75,31 @@ namespace Diff
 
             mHelpMenu = std::make_unique<HelpMenu>();
             mMenuBar->addMenu(mHelpMenu.get());
+
+            /* Connect dialog slots */
+            connect(mHelpMenu.get(), SIGNAL(about_signal()),
+                    this, SLOT(about_dialog()));
+        }
+
+        void MainWindow::create_ui_panes()
+        {
+            mTextPane = std::make_unique<TextPane>(this);
+        }
+
+        /* Slots */
+        void MainWindow::about_dialog()
+        {
+            /* Set dialog state */
+            uint32_t expected = 0u;
+            bool set = AboutDialog::mVisible.compare_exchange_strong(expected, 1u);
+
+            if (set)
+            {
+                /* Create about dialog */
+                AboutDialog *dialog = new AboutDialog(this);
+
+                dialog->show();
+            }
         }
 
         int main_display(int args, char **argv)

@@ -16,41 +16,45 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _DIFF_DISPLAY_MENU_FILE_HPP
-#define _DIFF_DISPLAY_MENU_FILE_HPP
+#ifndef _DIFF_DISPLAY_DIALOG_ABOUT_HPP
+#define _DIFF_DISPLAY_DIALOG_ABOUT_HPP
 
-#include <QMenu>
-#include <QAction>
+#include <QDialog>
+#include <QLayout>
 
+#include <atomic>
 #include <memory>
 
 namespace Diff
 {
     namespace Display
     {
-        class FileMenu : public QMenu
+        class AboutDialog : public QDialog
         {
             Q_OBJECT
 
             public:
-                explicit FileMenu(QWidget *parent = nullptr);
-                ~FileMenu() override;
+                explicit AboutDialog(QWidget *parent = nullptr);
+                ~AboutDialog() override;
+
+            public:
+                /* Visibility flag - use an atomic operation in case of
+                 * multithreaded operations. */
+                static std::atomic<uint32_t> mVisible;
 
             private:
-                /* File menu actions */
-                std::unique_ptr<QAction> mFileOpen;
-                std::unique_ptr<QAction> mFileClose;
+                std::unique_ptr<QLayout> mLayout;
 
             private:
-                void create_actions();
+                void create_widgets();
 
             signals:
             public slots:
-                /* File menu slots */
-                void open_action();
-                void close_action();
+                /* Note - this will get called for any reason that the dialog
+                 * will close, which is good to clear the open state. */
+                void done(int r) override;
         };
     } // namespace Display
 } // namespace Diff
 
-#endif /* _DIFF_DISPLAY_MENU_FILE_HPP */
+#endif /* _DIFF_DISPLAY_DIALOG_ABOUT_HPP */

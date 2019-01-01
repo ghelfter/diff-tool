@@ -16,25 +16,28 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <diff/display/pane/side.hpp>
+#ifndef _DIFF_DISPLAY_STRINGS_H
+#define _DIFF_DISPLAY_STRINGS_H
 
-namespace Diff
+#if defined(__cplusplus)
+extern "C"
 {
-    namespace Display
-    {
-        SidePane::SidePane(QWidget *parent)
-            : QWidget(parent)
-        {
-            create_widgets();
-        }
+#endif /* __cplusplus */
 
-        SidePane::~SidePane()
-        {
-        }
+extern const char *display_file_open;
 
-        void SidePane::create_widgets()
-        {
-            /* Create the vertical layout for the side panel. */
-        }
-    } // namespace Display
-} // namespace Diff
+extern const char *display_open_button;
+
+extern const char *display_close_button;
+
+extern const char *display_accept_button;
+
+extern const char *display_cancel_button;
+
+extern const char *display_ok_button;
+
+#if defined(__cplusplus)
+}
+#endif /* __cplusplus */
+
+#endif /* _DIFF_DISPLAY_STRINGS_H */

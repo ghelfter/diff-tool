@@ -16,25 +16,16 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <diff/display/pane/side.hpp>
+#include <diff/display/strings.h>
 
-namespace Diff
-{
-    namespace Display
-    {
-        SidePane::SidePane(QWidget *parent)
-            : QWidget(parent)
-        {
-            create_widgets();
-        }
+const char *display_file_open = "File Open";
 
-        SidePane::~SidePane()
-        {
-        }
+const char *display_open_button = "&Open";
 
-        void SidePane::create_widgets()
-        {
-            /* Create the vertical layout for the side panel. */
-        }
-    } // namespace Display
-} // namespace Diff
+const char *display_close_button = "&Close";
+
+const char *display_accept_button = "&Accept";
+
+const char *display_cancel_button = "&Cancel";
+
+const char *display_ok_button = "&Ok";

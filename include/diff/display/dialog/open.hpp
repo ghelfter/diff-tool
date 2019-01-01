@@ -16,25 +16,37 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <diff/display/pane/side.hpp>
+#ifndef _DIFF_DISPLAY_DIALOG_OPEN_HPP
+#define _DIFF_DISPLAY_DIALOG_OPEN_HPP
+
+#include <QFileDialog>
+
+#include <atomic>
 
 namespace Diff
 {
     namespace Display
     {
-        SidePane::SidePane(QWidget *parent)
-            : QWidget(parent)
+        class FileOpenDialog : public QFileDialog
         {
-            create_widgets();
-        }
+            Q_OBJECT
 
-        SidePane::~SidePane()
-        {
-        }
+            public:
+                explicit FileOpenDialog(QWidget *parent = nullptr);
+                ~FileOpenDialog() override;
 
-        void SidePane::create_widgets()
-        {
-            /* Create the vertical layout for the side panel. */
-        }
+            public:
+                /* Visibility flag - use an atomic operation in case of
+                 * multithreaded operations. */
+                static std::atomic<uint32_t> sVisible;
+
+            signals:
+            public slots:
+                /* Note - this will get called for any reason that the dialog
+                 * will close, which is good to clear the open state. */
+                void done(int r) override;
+        };
     } // namespace Display
 } // namespace Diff
+
+#endif /* _DIFF_DISPLAY_DIALOG_OPEN_HPP */

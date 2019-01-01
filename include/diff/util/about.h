@@ -24,8 +24,13 @@ extern "C"
 {
 #endif /* __cplusplus */
 
+extern const char *util_about_title;
+
 extern const char *util_about_version;
+
 extern const char *util_about_author;
+
+extern const char *util_about_description;
 
 extern const char *util_about_copyright;
 

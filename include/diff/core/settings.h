@@ -19,6 +19,8 @@
 #ifndef _DIFF_CORE_SETTINGS_H
 #define _DIFF_CORE_SETTINGS_H
 
+#include <stdint.h>
+
 #if defined(__cplusplus)
 extern "C"
 {

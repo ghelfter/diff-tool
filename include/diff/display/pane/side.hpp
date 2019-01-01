@@ -34,6 +34,7 @@ namespace Diff
                 ~SidePane() override;
 
             private:
+                virtual void create_widgets();
 
             signals:
             public slots:

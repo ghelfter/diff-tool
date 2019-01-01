@@ -48,7 +48,8 @@ namespace Diff
 
         void HelpMenu::about_action()
         {
-            fprintf(stdout, "Help->About\n");
+            /* Forward event signal from the menu to any others awaiting */
+            emit about_signal();
         }
     } // namespace Display
 } // namespace Diff

@@ -16,6 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -23,6 +24,7 @@
 #include <diff/core/settings.h>
 #include <diff/util/error.h>
 #include <diff/util/file_utils.h>
+#include <diff/util/atomic.h>
 
 typedef struct _diff_settings
 {
@@ -30,6 +32,16 @@ typedef struct _diff_settings
 } diff_settings_t;
 
 static diff_settings_t settings = { NULL };
+
+/* Atomic state to make settings loading fail on repeated attempts */
+static uint32_t settings_state = 0u;
+
+enum DiffSettingsState
+{
+    DIFF_SETTINGS_UNINITIALIZED = 0u,
+    DIFF_SETTINGS_INIT_STARTED  = 1u,
+    DIFF_SETTINGS_INITIALIZED   = 2u
+};
 
 unsigned int core_load_settings_file(const char *filepath)
 {
@@ -39,13 +51,32 @@ unsigned int core_load_settings_file(const char *filepath)
     uint8_t *buffer = NULL;
     size_t length = 0u;
 
-    local_ret = util_load_file(filepath, &buffer, &length);
+    uint32_t state_result = 0u;
+    uint32_t state_desired = DIFF_SETTINGS_INIT_STARTED;
 
-    if (local_ret == DIFF_SUCCESS)
+    UTIL_ATOMIC_COMPARE_EXCHANGE(settings_state, DIFF_SETTINGS_UNINITIALIZED,
+                                 state_desired, state_result);
+
+    if (state_result == DIFF_SETTINGS_UNINITIALIZED)
     {
-        retcode = core_load_settings_buffer(buffer);
+        local_ret = util_load_file(filepath, &buffer, &length);
 
-        free(buffer);
+        if (local_ret == DIFF_SUCCESS)
+        {
+            retcode = core_load_settings_buffer(buffer);
+
+            free(buffer);
+
+            state_desired = DIFF_SETTINGS_INITIALIZED;
+        }
+        else
+        {
+            /* Clear state on failure */
+            state_desired = DIFF_SETTINGS_UNINITIALIZED;
+        }
+
+        UTIL_ATOMIC_COMPARE_EXCHANGE(settings_state, DIFF_SETTINGS_INIT_STARTED,
+                                     state_desired, state_result);
     }
 
     return retcode;

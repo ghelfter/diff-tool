@@ -20,8 +20,10 @@
 #include <cstring>
 #include <cstdio>
 
+#include <diff/core/settings.h>
 #include <diff/display/window.hpp>
 #include <diff/util/common.h>
+#include <diff/util/about.h>
 
 enum ControllerState
 {
@@ -38,12 +40,16 @@ typedef int (*diff_top_fp)();
 
 static int default_operation()
 {
+    /* Load settings */
+    core_load_settings_file(nullptr);
+
     return Diff::Display::main_display(qt_argc, qt_argv);
 }
 
 static int print_version()
 {
-    fprintf(stdout, "Diff tool, version %s\n", DIFF_VERSION);
+    fprintf(stdout, "%s, version %s\n", util_about_title, util_about_version);
+    fprintf(stdout, "%s\n\n",  util_about_copyright);
     return 0;
 }
 

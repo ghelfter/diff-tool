@@ -14,7 +14,7 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.5)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_C_STANDARD 90)
@@ -29,7 +29,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(MAJOR_VERSION 0)
 set(MINOR_VERSION 0)
-set(PATCH_VERSION 1)
+set(PATCH_VERSION 2)
 
 set(BUILD_VERSION "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}")
 
@@ -52,6 +52,8 @@ if (APPLE)
     set(CMAKE_C_FLAGS "${DIFF_UNIX_FLAGS} -O3 -mmacosx-version-min=10.11")
     set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS}")
 elseif (UNIX)
+    set(CMAKE_C_FLAGS "${DIFF_UNIX_FLAGS} -O3")
+    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS}")
 endif()
 
 set(DIFF_SOURCES
@@ -65,10 +67,13 @@ set(DIFF_SOURCES
 
     # Display and UI files
     src/display/window.cpp
+    src/display/strings.c
+    src/display/dialog/about.cpp
     src/display/menu/edit.cpp
     src/display/menu/file.cpp
     src/display/menu/help.cpp
     src/display/pane/side.cpp
+    src/display/pane/text.cpp
 
     # Process running files
     src/proc/run_diff.c
@@ -89,10 +94,13 @@ set(DIFF_HEADERS
     include/diff/core/state.h
 
     include/diff/display/window.hpp
+    include/diff/display/strings.h
+    include/diff/display/dialog/about.hpp
     include/diff/display/menu/edit.hpp
     include/diff/display/menu/file.hpp
     include/diff/display/menu/help.hpp
     include/diff/display/pane/side.hpp
+    include/diff/display/pane/text.hpp
 
     include/diff/proc/run_diff.h
 
