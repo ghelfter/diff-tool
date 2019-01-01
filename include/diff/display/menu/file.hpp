@@ -45,6 +45,8 @@ namespace Diff
                 void create_actions();
 
             signals:
+                void open_signal();
+
             public slots:
                 /* File menu slots */
                 void open_action();

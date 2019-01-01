@@ -17,16 +17,18 @@
 */
 
 #include <diff/display/menu/help.hpp>
+#include <diff/display/strings.h>
+
+#include <QAction>
 
 #include <memory>
-#include <cstdio>
 
 namespace Diff
 {
     namespace Display
     {
         HelpMenu::HelpMenu(QWidget *parent)
-            : QMenu(tr("&Help"), parent)
+            : QMenu(tr(display_help_button), parent)
             , mHelpAbout(nullptr)
         {
             create_actions();
@@ -38,7 +40,7 @@ namespace Diff
 
         void HelpMenu::create_actions()
         {
-            mHelpAbout = std::make_unique<QAction>(tr("&About"), this);
+            mHelpAbout = std::make_unique<QAction>(tr(display_about_button), this);
             mHelpAbout->setStatusTip(tr("About this program"));
             connect(mHelpAbout.get(), &QAction::triggered,
                     this, &HelpMenu::about_action);

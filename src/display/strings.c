@@ -29,3 +29,9 @@ const char *display_accept_button = "&Accept";
 const char *display_cancel_button = "&Cancel";
 
 const char *display_ok_button = "&Ok";
+
+const char *display_view_button = "&View";
+
+const char *display_about_button = "&About";
+
+const char *display_help_button = "&Help";

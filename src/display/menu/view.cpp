@@ -16,37 +16,41 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _DIFF_DISPLAY_PANE_SIDE_HPP
-#define _DIFF_DISPLAY_PANE_SIDE_HPP
+#include <diff/display/menu/view.hpp>
+#include <diff/display/strings.h>
 
-#include <QDockWidget>
-
-#include <atomic>
+#include <QAction>
 
 namespace Diff
 {
     namespace Display
     {
-        class SidePane : public QDockWidget
+        ViewMenu::ViewMenu(QWidget *parent)
+            : QMenu(tr(display_view_button), parent)
+            , mViewSide(nullptr)
         {
-            Q_OBJECT
+            create_actions();
+        }
 
-            public:
-                explicit SidePane(QWidget *parent = nullptr);
-                ~SidePane() override;
+        ViewMenu::~ViewMenu()
+        {
+        }
 
-            public:
-                /* Visibility flag - use an atomic operation in case of
-                 * multithreaded operations. */
-                static std::atomic<uint32_t> sVisible;
+        void ViewMenu::create_actions()
+        {
+            mViewSide = std::make_unique<QAction>(tr("Side"), this);
 
-            private:
-                virtual void create_widgets();
+            mViewSide->setStatusTip(tr("Display sidebar"));
 
-            signals:
-            public slots:
-        };
+            connect(mViewSide.get(), &QAction::triggered,
+                    this, &ViewMenu::side_action);
+
+            addAction(mViewSide.get());
+        }
+
+        void ViewMenu::side_action()
+        {
+            emit side_signal();
+        }
     } // namespace Display
 } // namespace Diff
-
-#endif /* _DIFF_DISPLAY_PANE_SIDE_HPP */

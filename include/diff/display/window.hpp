@@ -20,14 +20,25 @@
 #define _DIFF_DISPLAY_WINDOW_HPP
 
 #include <QMainWindow>
-#include <QTextEdit>
 
 #include <memory>
+
+class QTextEdit;
 
 namespace Diff
 {
     namespace Display
     {
+        /* Forward declare UI types */
+        class FileOpenDialog;
+        class AboutDialog;
+        class EditMenu;
+        class FileMenu;
+        class HelpMenu;
+        class ViewMenu;
+        class TextPane;
+        class SidePane;
+
         class MainWindow : public QMainWindow
         {
             Q_OBJECT
@@ -40,17 +51,29 @@ namespace Diff
                 /* Main menu bar */
                 std::unique_ptr<QMenuBar> mMenuBar;
 
-                /* File menu and its actions */
-                std::unique_ptr<QMenu> mFileMenu;
+                /* File menu */
+                std::unique_ptr<FileMenu> mFileMenu;
 
-                /* Edit menu and its actions */
-                std::unique_ptr<QMenu> mEditMenu;
+                /* Edit menu */
+                std::unique_ptr<EditMenu> mEditMenu;
 
-                /* Help menu and its actions */
-                std::unique_ptr<QMenu> mHelpMenu;
+                /* View menu */
+                std::unique_ptr<ViewMenu> mViewMenu;
+
+                /* Help menu */
+                std::unique_ptr<HelpMenu> mHelpMenu;
 
                 /* Central text display */
-                std::unique_ptr<QTextEdit> mTextPane;
+                std::unique_ptr<TextPane> mTextPane;
+
+                /* Side pane */
+                std::unique_ptr<SidePane> mSidePane;
+
+                /* File open dialog */
+                std::unique_ptr<FileOpenDialog> mFileDialog;
+
+                /* About dialog */
+                std::unique_ptr<AboutDialog> mAboutDialog;
 
             private:
                 void create_menus();
@@ -59,6 +82,9 @@ namespace Diff
             signals:
             public slots:
                 void about_dialog();
+                void open_dialog();
+                void close_about_dialog(int result);
+                void close_file_dialog(int result);
         };
         
         int main_display(int args, char **argv);

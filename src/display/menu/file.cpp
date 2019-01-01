@@ -58,6 +58,7 @@ namespace Diff
 
         void FileMenu::open_action()
         {
+            emit open_signal();
         }
 
         void FileMenu::close_action()

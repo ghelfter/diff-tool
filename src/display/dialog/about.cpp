@@ -28,7 +28,7 @@ namespace Diff
 {
     namespace Display
     {
-        std::atomic<uint32_t> AboutDialog::mVisible;
+        std::atomic<uint32_t> AboutDialog::sVisible;
 
         AboutDialog::AboutDialog(QWidget *parent)
             : QDialog(parent)
@@ -75,7 +75,7 @@ namespace Diff
             /* Clear atomic state - About should only be opened with an action
              * that acquires the atomic state and fails. */
             uint32_t expected = 1u;
-            AboutDialog::mVisible.compare_exchange_strong(expected, 0u);
+            AboutDialog::sVisible.compare_exchange_strong(expected, 0u);
 
             /* Call superclass done signal */
             QDialog::done(r);

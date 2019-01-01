@@ -26,9 +26,12 @@
 
 #include <diff/display/window.hpp>
 #include <diff/display/dialog/about.hpp>
+#include <diff/display/dialog/open.hpp>
 #include <diff/display/menu/edit.hpp>
 #include <diff/display/menu/file.hpp>
 #include <diff/display/menu/help.hpp>
+#include <diff/display/menu/view.hpp>
+#include <diff/display/pane/side.hpp>
 #include <diff/display/pane/text.hpp>
 #include <diff/util/about.h>
 
@@ -41,7 +44,12 @@ namespace Diff
             , mMenuBar(nullptr)
             , mFileMenu(nullptr)
             , mEditMenu(nullptr)
+            , mViewMenu(nullptr)
             , mHelpMenu(nullptr)
+            , mTextPane(nullptr)
+            , mSidePane(nullptr)
+            , mFileDialog(nullptr)
+            , mAboutDialog(nullptr)
         {
             create_menus();
 
@@ -50,6 +58,9 @@ namespace Diff
 
             /* Set main window widget */
             setCentralWidget(mTextPane.get());
+
+            /* Set side pane */
+            addDockWidget(Qt::LeftDockWidgetArea, mSidePane.get());
 
             /* Set the title to the program title */
             setWindowTitle(tr(util_about_title));
@@ -73,17 +84,24 @@ namespace Diff
             mEditMenu = std::make_unique<EditMenu>();
             mMenuBar->addMenu(mEditMenu.get());
 
+            mViewMenu = std::make_unique<ViewMenu>();
+            mMenuBar->addMenu(mViewMenu.get());
+
             mHelpMenu = std::make_unique<HelpMenu>();
             mMenuBar->addMenu(mHelpMenu.get());
 
             /* Connect dialog slots */
             connect(mHelpMenu.get(), SIGNAL(about_signal()),
                     this, SLOT(about_dialog()));
+            connect(mFileMenu.get(), SIGNAL(open_signal()),
+                    this, SLOT(open_dialog()));
         }
 
         void MainWindow::create_ui_panes()
         {
             mTextPane = std::make_unique<TextPane>(this);
+
+            mSidePane = std::make_unique<SidePane>(this);
         }
 
         /* Slots */
@@ -91,14 +109,48 @@ namespace Diff
         {
             /* Set dialog state */
             uint32_t expected = 0u;
-            bool set = AboutDialog::mVisible.compare_exchange_strong(expected, 1u);
+            bool set = AboutDialog::sVisible.compare_exchange_strong(expected, 1u);
 
             if (set)
             {
                 /* Create about dialog */
-                AboutDialog *dialog = new AboutDialog(this);
+                mAboutDialog = std::make_unique<AboutDialog>(this);
+                connect(mAboutDialog.get(), SIGNAL(finished(int)),
+                        this, SLOT(close_about_dialog(int)));
 
-                dialog->show();
+                mAboutDialog->show();
+            }
+        }
+
+        void MainWindow::close_about_dialog(int reason)
+        {
+            mAboutDialog = nullptr;
+        }
+
+        void MainWindow::close_file_dialog(int reason)
+        {
+            if (reason == static_cast<int>(QDialog::Accepted))
+            {
+                /* Forward selection to core operations */
+            }
+
+            mFileDialog = nullptr;
+        }
+
+        void MainWindow::open_dialog()
+        {
+            /* Check dialog state for file->open */
+            uint32_t expected = 0u;
+            bool set = FileOpenDialog::sVisible.compare_exchange_strong(expected, 1u);
+
+            if (set)
+            {
+                /* Create about dialog */
+                mFileDialog = std::make_unique<FileOpenDialog>(this);
+                connect(mFileDialog.get(), SIGNAL(finished(int)),
+                        this, SLOT(close_file_dialog(int)));
+
+                mFileDialog->show();
             }
         }
 

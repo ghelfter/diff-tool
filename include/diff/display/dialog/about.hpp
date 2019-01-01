@@ -40,7 +40,7 @@ namespace Diff
             public:
                 /* Visibility flag - use an atomic operation in case of
                  * multithreaded operations. */
-                static std::atomic<uint32_t> mVisible;
+                static std::atomic<uint32_t> sVisible;
 
             private:
                 std::unique_ptr<QLayout> mLayout;

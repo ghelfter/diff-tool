@@ -19,6 +19,8 @@
 #include <diff/display/dialog/open.hpp>
 #include <diff/display/strings.h>
 
+#include <QStringList>
+
 namespace Diff
 {
     namespace Display
@@ -26,52 +28,44 @@ namespace Diff
         std::atomic<uint32_t> FileOpenDialog::sVisible;
 
         FileOpenDialog::FileOpenDialog(QWidget *parent)
-            : QDialog(parent)
+            : QFileDialog(parent)
         {
             /* Set the open title */
-            setWindowTitle(tr());
+            setWindowTitle(tr("Open Files"));
+
+            /* Set up mime filters */
+            QStringList filters;
+
+            setup_filter_types(filters);
+
+            setNameFilters(filters);
         }
 
-        AboutDialog::~AboutDialog()
+        FileOpenDialog::~FileOpenDialog()
         {
         }
 
-        void AboutDialog::create_widgets()
-        {
-            /* Create labels */
-            QLabel *version_label = new QLabel(tr(util_about_title)
-                                               + tr(" - Version ")
-                                               + tr(util_about_version));
-
-            QLabel *copyright_label = new QLabel(tr(util_about_copyright));
-
-            /* Add close button */
-            QPushButton *close_button = new QPushButton(display_cancel_button);
-
-            /* Create layout and add UI elements to it. Ownership of the
-             * widgets shall be transferred to the layout, whose parent
-             * is set to this dialog. */
-            mLayout = std::make_unique<QVBoxLayout>();
-
-            mLayout->addWidget(version_label);
-            mLayout->addWidget(copyright_label);
-            mLayout->addWidget(close_button);
-
-            /* Connect close button with done event */
-            connect(close_button, SIGNAL(clicked()), this, SLOT(accept()));
-
-            setLayout(mLayout.get());
-        }
-
-        void AboutDialog::done(int r)
+        void FileOpenDialog::done(int r)
         {
             /* Clear atomic state - About should only be opened with an action
-             * that acquires the atomic state and fails. */
+             * that acquires the atomic state and fails if the dialog is
+             * open. */
             uint32_t expected = 1u;
-            AboutDialog::mVisible.compare_exchange_strong(expected, 0u);
+            FileOpenDialog::sVisible.compare_exchange_strong(expected, 0u);
 
-            /* Call superclass done signal */
+            /* Call superclass done method */
             QDialog::done(r);
+        }
+
+        void FileOpenDialog::setup_filter_types(QStringList &list)
+        {
+            list << "C & C++ files (*.c *.h *.cpp *.hpp *.C *.cc)"
+                 << "Python files (*.py)"
+                 << "Perl files (*.pl *.pm)"
+                 << "Haskell files (*.hs)"
+                 << "Tcl files (*.tcl)"
+                 << "Lisp files (*.lisp)"
+                 << "All file types (*)";
         }
     } // namespace Display
 } // namespace Diff

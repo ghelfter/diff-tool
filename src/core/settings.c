@@ -22,9 +22,10 @@
 #include <string.h>
 
 #include <diff/core/settings.h>
+#include <diff/util/atomic.h>
 #include <diff/util/error.h>
 #include <diff/util/file_utils.h>
-#include <diff/util/atomic.h>
+#include <diff/util/memory.h>
 
 typedef struct _diff_settings
 {
@@ -36,6 +37,7 @@ static diff_settings_t settings = { NULL };
 /* Atomic state to make settings loading fail on repeated attempts */
 static uint32_t settings_state = 0u;
 
+/* Atomic states for the settings to ensure that any */
 enum DiffSettingsState
 {
     DIFF_SETTINGS_UNINITIALIZED = 0u,
@@ -88,6 +90,8 @@ unsigned int core_load_settings_buffer(uint8_t *buffer)
 
     if (buffer != NULL)
     {
+        /* Find the first newline character */
+
         retcode = DIFF_SUCCESS;
     }
 
@@ -98,7 +102,7 @@ void core_set_diff_program(const char *path)
 {
     if (settings.diff_program_path != NULL)
     {
-        free(settings.diff_program_path);
+        util_free(settings.diff_program_path);
     }
 
     settings.diff_program_path = strdup(path);
@@ -106,5 +110,5 @@ void core_set_diff_program(const char *path)
 
 char* core_get_diff_program()
 {
-    return strdup(settings.diff_program_path);
+    return util_strdup(settings.diff_program_path);
 }

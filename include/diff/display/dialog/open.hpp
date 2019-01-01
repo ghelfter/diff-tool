@@ -23,6 +23,8 @@
 
 #include <atomic>
 
+class QStringList;
+
 namespace Diff
 {
     namespace Display
@@ -39,6 +41,9 @@ namespace Diff
                 /* Visibility flag - use an atomic operation in case of
                  * multithreaded operations. */
                 static std::atomic<uint32_t> sVisible;
+
+            private:
+                void setup_filter_types(QStringList &list);
 
             signals:
             public slots:

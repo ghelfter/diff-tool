@@ -36,6 +36,12 @@ extern const char *display_cancel_button;
 
 extern const char *display_ok_button;
 
+extern const char *display_view_button;
+
+extern const char *display_about_button;
+
+extern const char *display_help_button;
+
 #if defined(__cplusplus)
 }
 #endif /* __cplusplus */

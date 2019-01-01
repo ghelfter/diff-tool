@@ -20,9 +20,10 @@
 #define _DIFF_DISPLAY_MENU_HELP_HPP
 
 #include <QMenu>
-#include <QAction>
 
 #include <memory>
+
+class QAction;
 
 namespace Diff
 {

@@ -32,6 +32,21 @@ static int run_process(const char *program, const char *file, uint8_t **buffer)
 {
     FILE *fp = NULL;
     int result = 0;
+    pid_t id = 0;
+    char *argv[12];
+
+    id = fork();
+
+    if (id == 0)
+    {
+        /* Execute the formatter */
+        argv[0] = file;
+        argv[1] = NULL;
+        execvp(program, argv);
+    }
+    else
+    {
+    }
 
     return result;
 }
@@ -42,6 +57,8 @@ static int run_process(const char *program, const char *file, uint8_t **buffer)
 }
 #endif
 
+/* #TODO:: Change this to allow for arguments to be passed in as an array
+ * instead of just the file argument. */
 unsigned int proc_run_diff(const char *program, const char *file,
                            uint8_t **buffer)
 {

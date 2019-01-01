@@ -69,9 +69,11 @@ set(DIFF_SOURCES
     src/display/window.cpp
     src/display/strings.c
     src/display/dialog/about.cpp
+    src/display/dialog/open.cpp
     src/display/menu/edit.cpp
     src/display/menu/file.cpp
     src/display/menu/help.cpp
+    src/display/menu/view.cpp
     src/display/pane/side.cpp
     src/display/pane/text.cpp
 
@@ -96,9 +98,11 @@ set(DIFF_HEADERS
     include/diff/display/window.hpp
     include/diff/display/strings.h
     include/diff/display/dialog/about.hpp
+    include/diff/display/dialog/open.hpp
     include/diff/display/menu/edit.hpp
     include/diff/display/menu/file.hpp
     include/diff/display/menu/help.hpp
+    include/diff/display/menu/view.hpp
     include/diff/display/pane/side.hpp
     include/diff/display/pane/text.hpp
 

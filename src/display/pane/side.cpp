@@ -23,7 +23,7 @@ namespace Diff
     namespace Display
     {
         SidePane::SidePane(QWidget *parent)
-            : QWidget(parent)
+            : QDockWidget(parent)
         {
             create_widgets();
         }
