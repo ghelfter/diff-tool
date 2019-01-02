@@ -122,7 +122,7 @@ namespace Diff
             }
         }
 
-        void MainWindow::close_about_dialog(int reason)
+        void MainWindow::close_about_dialog(int /* reason */)
         {
             mAboutDialog = nullptr;
         }

@@ -16,27 +16,19 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <stdlib.h>
-#include <string.h>
+#include <diff/display/dialog/format.hpp>
 
-static void* (*util_alloc_func)(size_t) = malloc;
-static void (*util_free_func)(void*) = free;
-
-void* util_alloc(size_t size)
+namespace Diff
 {
-    return util_alloc_func(size);
-}
-
-void util_free(void *mem)
-{
-    util_free_func(mem);
-}
-
-void util_set_allocators(void* (*alloc_func)(size_t), void (*free_func)(void*))
-{
-    if (alloc_func != NULL && free_func != NULL)
+    namespace Display
     {
-        util_alloc_func = alloc_func;
-        util_free_func = free_func;
-    }
-}
+        FormatDialog::FormatDialog(QWidget *parent)
+            : QDialog(parent)
+        {
+        }
+
+        FormatDialog::~FormatDialog()
+        {
+        }
+    } // namespace Display
+} // namespace Diff

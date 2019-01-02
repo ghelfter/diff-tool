@@ -31,6 +31,11 @@ unsigned int core_log_init(const char *path);
  * the log file. */
 void core_log_write(const char *message);
 
+/* Logs the given message, with a timestamp alongside the message. */
+void core_log_write_timestamped(const char *message);
+
+void core_log_shutdown();
+
 #if defined(__cplusplus)
 }
 #endif /* __cplusplus */

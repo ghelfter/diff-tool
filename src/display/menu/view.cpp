@@ -38,7 +38,7 @@ namespace Diff
 
         void ViewMenu::create_actions()
         {
-            mViewSide = std::make_unique<QAction>(tr("Side"), this);
+            mViewSide = std::make_unique<QAction>(tr("&Side"), this);
 
             mViewSide->setStatusTip(tr("Display sidebar"));
 

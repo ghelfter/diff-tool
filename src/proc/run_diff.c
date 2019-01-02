@@ -16,22 +16,29 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <diff/util/common.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 
 #include <diff/proc/run_diff.h>
+#include <diff/util/error.h>
 
 #if defined(DIFF_POSIX)
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #elif defined(DIFF_WIN32)
 #endif
+
+static int run_process(const char *program, const char *file, uint8_t **buffer);
 
 #if defined(DIFF_POSIX)
 static int run_process(const char *program, const char *file, uint8_t **buffer)
 {
-    FILE *fp = NULL;
     int result = 0;
+    int process_res = 0;
     pid_t id = 0;
     char *argv[12];
 
@@ -46,6 +53,12 @@ static int run_process(const char *program, const char *file, uint8_t **buffer)
     }
     else
     {
+        /* Wait for the process to finish */
+        waitpid(id, &process_res, 0);
+        if (WIFEXITED(process_res))
+        {
+            result = 1;
+        }
     }
 
     return result;
@@ -62,12 +75,17 @@ static int run_process(const char *program, const char *file, uint8_t **buffer)
 unsigned int proc_run_diff(const char *program, const char *file,
                            uint8_t **buffer)
 {
-    unsigned int retcode = 0u;
+    unsigned int retcode = DIFF_ERROR;
     int result = 0;
 
     if (program != NULL && file != NULL && buffer != NULL)
     {
         result = run_process(program, file, buffer);
+
+        if (result != 0)
+        {
+            retcode = DIFF_SUCCESS;
+        }
     }
 
     return retcode;

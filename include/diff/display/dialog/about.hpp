@@ -20,10 +20,11 @@
 #define _DIFF_DISPLAY_DIALOG_ABOUT_HPP
 
 #include <QDialog>
-#include <QLayout>
 
 #include <atomic>
 #include <memory>
+
+class QLayout;
 
 namespace Diff
 {

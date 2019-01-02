@@ -69,6 +69,7 @@ set(DIFF_SOURCES
     src/display/window.cpp
     src/display/strings.c
     src/display/dialog/about.cpp
+    src/display/dialog/format.cpp
     src/display/dialog/open.cpp
     src/display/menu/edit.cpp
     src/display/menu/file.cpp
@@ -85,6 +86,7 @@ set(DIFF_SOURCES
     src/util/error.c
     src/util/file_utils.c
     src/util/memory.c
+    src/util/string_utils.c
 )
 
 # Note that headers requiring Qt components must be explicitly listed
@@ -98,6 +100,7 @@ set(DIFF_HEADERS
     include/diff/display/window.hpp
     include/diff/display/strings.h
     include/diff/display/dialog/about.hpp
+    include/diff/display/dialog/format.hpp
     include/diff/display/dialog/open.hpp
     include/diff/display/menu/edit.hpp
     include/diff/display/menu/file.hpp
@@ -115,6 +118,7 @@ set(DIFF_HEADERS
     include/diff/util/c_unique_ptr.hpp
     include/diff/util/file_utils.h
     include/diff/util/memory.h
+    include/diff/util/string_utils.h
 )
 
 # Platform specific source files

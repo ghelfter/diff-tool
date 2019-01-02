@@ -26,6 +26,7 @@
 #include <diff/util/error.h>
 #include <diff/util/file_utils.h>
 #include <diff/util/memory.h>
+#include <diff/util/string_utils.h>
 
 typedef struct _diff_settings
 {

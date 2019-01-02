@@ -16,27 +16,32 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <stdlib.h>
-#include <string.h>
+/* Contains a dialog, which will show a formatted document/diff after the
+ * formatter has been run on the original documents. */
 
-static void* (*util_alloc_func)(size_t) = malloc;
-static void (*util_free_func)(void*) = free;
+#ifndef _DIFF_DISPLAY_DIALOG_FORMAT_HPP
+#define _DIFF_DISPLAY_DIALOG_FORMAT_HPP
 
-void* util_alloc(size_t size)
+#include <QDialog>
+
+namespace Diff
 {
-    return util_alloc_func(size);
-}
-
-void util_free(void *mem)
-{
-    util_free_func(mem);
-}
-
-void util_set_allocators(void* (*alloc_func)(size_t), void (*free_func)(void*))
-{
-    if (alloc_func != NULL && free_func != NULL)
+    namespace Display
     {
-        util_alloc_func = alloc_func;
-        util_free_func = free_func;
-    }
-}
+        class FormatDialog : public QDialog
+        {
+            Q_OBJECT
+
+            public:
+                explicit FormatDialog(QWidget *parent = nullptr);
+                ~FormatDialog() override;
+
+            private:
+
+            signals:
+            public slots:
+        };
+    } // namespace Display
+} // namespace Diff
+
+#endif /* _DIFF_DISPLAY_DIALOG_FORMAT_HPP */

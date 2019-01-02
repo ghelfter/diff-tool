@@ -19,8 +19,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+
 #include <diff/util/error.h>
 #include <diff/util/memory.h>
+#include <diff/util/string_utils.h>
 
 static char *log_path = NULL;
 
@@ -62,4 +65,38 @@ void core_log_write(const char *message)
             fclose(fp);
         }
     }
+}
+
+void core_log_write_timestamped(const char *message)
+{
+    FILE *fp = NULL;
+    time_t current_time;
+    char *time_string = NULL;
+    struct tm *time_info = NULL;
+
+    if (message != NULL)
+    {
+        fp = fopen(log_path, "a");
+
+        if (fp != NULL)
+        {
+            /* Acquire current time */
+            time(&current_time);
+
+            time_info = localtime(&current_time);
+            time_string = asctime(time_info);
+            util_chomp(time_string, '\n');
+
+            fputs(time_string, fp);
+            fputs(" -- ", fp);
+            fputs(message, fp);
+            fputc('\n', fp);
+        }
+    }
+}
+
+void core_log_shutdown()
+{
+    util_free(log_path);
+    log_path = NULL;
 }

@@ -20,6 +20,7 @@
 #include <cstring>
 #include <cstdio>
 
+#include <diff/core/log.h>
 #include <diff/core/settings.h>
 #include <diff/display/window.hpp>
 #include <diff/util/common.h>
@@ -36,6 +37,8 @@ enum ControllerState
 static int qt_argc = 0;
 static char **qt_argv = nullptr;
 
+static const char *default_logpath = "./diff_log.log";
+
 typedef int (*diff_top_fp)();
 
 static int default_operation()
@@ -43,7 +46,17 @@ static int default_operation()
     /* Load settings */
     core_load_settings_file(nullptr);
 
-    return Diff::Display::main_display(qt_argc, qt_argv);
+    core_log_init(default_logpath);
+
+    /* Log startup */
+    core_log_write_timestamped("Initialization.");
+
+    int result = Diff::Display::main_display(qt_argc, qt_argv);
+
+    /* Shut down systems */
+    core_log_shutdown();
+
+    return result;
 }
 
 static int print_version()

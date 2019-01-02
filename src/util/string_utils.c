@@ -16,27 +16,36 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <stdlib.h>
 #include <string.h>
+#include <diff/util/memory.h>
 
-static void* (*util_alloc_func)(size_t) = malloc;
-static void (*util_free_func)(void*) = free;
-
-void* util_alloc(size_t size)
+void util_chomp(char *string, char delim)
 {
-    return util_alloc_func(size);
-}
+    size_t length = 0u;
 
-void util_free(void *mem)
-{
-    util_free_func(mem);
-}
-
-void util_set_allocators(void* (*alloc_func)(size_t), void (*free_func)(void*))
-{
-    if (alloc_func != NULL && free_func != NULL)
+    if (string != NULL)
     {
-        util_alloc_func = alloc_func;
-        util_free_func = free_func;
+        length = strlen(string);
+
+        if (length > 0u && string[length - 1u] == delim)
+        {
+            string[length - 1u] = '\0';
+        }
     }
+}
+
+char* util_strdup(const char *str)
+{
+    char *result = NULL;
+    size_t string_length = 0u;
+
+    if (str != NULL)
+    {
+        string_length = strlen(str) + 1;
+        result = util_alloc(sizeof(char) * string_length);
+
+        memcpy(result, str, sizeof(char) * string_length);
+    }
+
+    return result;
 }
