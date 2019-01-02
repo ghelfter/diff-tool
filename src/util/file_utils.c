@@ -19,10 +19,15 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
 
 #include <diff/util/common.h>
 #include <diff/util/error.h>
 #include <diff/util/file_utils.h>
+
+#if defined(DIFF_POSIX)
+#include <sys/stat.h>
+#endif
 
 unsigned int util_load_file(const char *filepath, uint8_t **buffer,
                             size_t *length)
@@ -74,3 +79,55 @@ unsigned int util_load_file(const char *filepath, uint8_t **buffer,
 
     return retcode;
 }
+
+#if defined(DIFF_POSIX)
+unsigned int util_is_file(const char *filepath)
+{
+    unsigned int retcode = DIFF_FILE_NONEXISTANT;
+    int result = 0;
+    struct stat file_info;
+
+    result = stat(filepath, &file_info);
+
+    /* Check for success of stat operation */
+    if (result == 0)
+    {
+        switch (file_info.st_mode & S_IFMT)
+        {
+            case S_IFIFO:
+            case S_IFSOCK:
+            case S_IFCHR:
+            case S_IFBLK:
+                retcode = DIFF_FILE_IRREGULAR;
+                break;
+            case S_IFLNK:
+                retcode = DIFF_FILE_SYMBOLIC;
+                break;
+            case S_IFREG:
+                retcode = DIFF_FILE_REGULAR;
+                break;
+            default:
+                break;
+        }
+    }
+    else if(errno == EACCES)
+    {
+        retcode = DIFF_FILE_NOACCESS;
+    }
+    else if (errno == ENOTDIR)
+    {
+        retcode = DIFF_FILE_NONEXISTANT;
+    }
+    else if(errno == ENOMEM || errno == EFAULT || errno == ENAMETOOLONG)
+    {
+        retcode = DIFF_FILE_ERROR;
+    }
+
+    return retcode;
+}
+#else
+unsigned int util_is_file(const char *filepath)
+{
+    return DIFF_FILE_NONEXISTANT;
+}
+#endif

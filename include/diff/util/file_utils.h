@@ -27,6 +27,21 @@ extern "C"
 unsigned int util_load_file(const char *filepath, uint8_t **buffer,
                             size_t *length);
 
+enum FileInfo
+{
+    DIFF_FILE_NONEXISTANT = 0u,  /* Filepath does not exist.         */
+    DIFF_FILE_REGULAR     = 1u,  /* Normal file, with proper access  */
+    DIFF_FILE_NOACCESS    = 2u,  /* No access to the given file path */
+    DIFF_FILE_DIRECTORY   = 3u,  /* Path exists, but is a directory  */
+    DIFF_FILE_IRREGULAR   = 4u,  /* Sockets, devices, FIFOs, etc.    */
+    DIFF_FILE_SYMBOLIC    = 5u,  /* Symbolic link, could be file.    */
+    DIFF_FILE_ERROR       = 6u   /* System level error.              */
+};
+
+/* Returns an enum value from the FileInfo enum, accounting for whether the
+ * file exists and whether the process has access to it. */
+unsigned int util_is_file(const char *filepath);
+
 #if defined(__cplusplus)
 }
 #endif /* __cplusplus */
