@@ -16,24 +16,58 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <stddef.h>
+#include <pthread.h>
 #include <diff/util/thread.h>
+
+/* Declare internal representations of the threading structures to use a
+ * pthread implementation. */
+struct _util_mutex
+{
+    pthread_mutex_t lock;
+};
+
+struct _util_cond
+{
+    pthread_cond_t cond;
+};
+
+void util_mutex_initialize(util_mutex_t *lock)
+{
+    pthread_mutex_init(&lock->lock, NULL);
+}
 
 void util_mutex_lock(util_mutex_t *lock)
 {
-    pthread_mutex_lock(lock);
+    pthread_mutex_lock(&lock->lock);
+}
+
+void util_mutex_unlock(util_mutex_t *lock)
+{
+    pthread_mutex_unlock(&lock->lock);
+}
+
+void util_cond_initialize(util_cond_t *cond)
+{
+    pthread_cond_init(&cond->cond, NULL);
+}
+
+void util_cond_destroy(util_cond_t *cond)
+{
+    pthread_cond_destroy(&cond->cond);
 }
 
 void util_cond_sleep(util_cond_t *cond, util_mutex_t *lock)
 {
-    pthread_cond_wait(cond, lock);
+    pthread_cond_wait(&cond->cond, &lock->lock);
 }
 
 void util_cond_signal(util_cond_t *cond)
 {
-    pthread_cond_signal(cond);
+    pthread_cond_signal(&cond->cond);
 }
 
 void util_cond_broadcast(util_cond_t *cond)
 {
-    pthread_cond_broadcast(cond);
+    pthread_cond_broadcast(&cond->cond);
 }

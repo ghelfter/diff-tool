@@ -22,24 +22,41 @@
 #include <diff/util/common.h>
 
 #if defined(DIFF_POSIX)
-#include <pthread.h>
-typedef pthread_mutex_t util_mutex_t;
-typedef pthread_cond_t util_cond_t;
-
-#define DIFF_UTIL_COND_INIT PTHREAD_COND_INITIALIZER
-#define DIFF_UTIL_THREAD_RETTYPE void*
+typedef void* util_thread_ret_t;
+#define UTIL_THREAD_DEFAULT NULL
 #elif defined(DIFF_WIN32)
-#include <synhapi.h>
-typedef SRWLock util_mutex_t;
-typedef CONDITION_VARIABLE util_cond_t;
-
-#define DIFF_UTIL_COND_INIT CONDITION_VARIABLE_INIT
-#define DIFF_UTIL_THREAD_RETTYPE unsigned long
+typedef unsigned long util_thread_ret_t;
+#define UTIL_THREAD_DEFAULT 0u
 #endif
+
+/* Forward declaration of threading types */
+typedef util_thread_ret_t (*util_thread_fp)(void*);
+typedef struct _util_mutex util_mutex_t;
+typedef struct _util_cond util_cond_t;
+
+/* It is the caller's responsibility to ensure that all pointers passed are
+ * valid for the threading functions. */
+
+/* Initializes the given mutex lock. Mutex locks do not need to be explicitly
+ * destroyed. */
+void util_mutex_initialize(util_mutex_t *lock);
 
 /* Given an initialized mutex, performs a lock on the mutex. It will block
  * until the lock becomes free. */
 void util_mutex_lock(util_mutex_t *lock);
+
+/* Given an initialized mutex, unlocks the mutex. The current thread must
+ * have previously acquired the lock. */
+void util_mutex_unlock(util_mutex_t *lock);
+
+/* Initialize the given condition variable. The util_cond_destroy function
+ * must be used to clean up the condition variable, when there are no
+ * threads waiting on the condition. */
+void util_cond_initialize(util_cond_t *cond);
+
+/* Destroys the given condition variable. No thread must be waiting on the
+ * condition variable. */
+void util_cond_destroy(util_cond_t *cond);
 
 /* Given a mutex lock and a condition variable, will sleep the thread until
  * another thread signals the condition. */
